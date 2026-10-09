@@ -1,0 +1,49 @@
+.claude-plugin/marketplace.json
+  s_9717d4e1b6aa71::t_2b5578532d49e7 1-17
+.gitignore
+  s_9717d4e1b6aa71::t_899a95aa854e22 1-4
+LICENSE
+  s_9717d4e1b6aa71::t_84a0a7b49cf3ab 1-21
+claude/CLAUDE.md
+  s_9717d4e1b6aa71::t_a3446c02c83da9 1-75
+install.sh
+  s_9717d4e1b6aa71::t_211d00c08698b8 1-28
+mods/agent-monitor/.claude-plugin/plugin.json
+  s_9717d4e1b6aa71::t_1a0bb2d2bf79d3 1-7
+mods/agent-monitor/hooks/avatar.ts
+  s_9717d4e1b6aa71::t_0f75a4e35bd868 1-122
+mods/agent-monitor/hooks/hooks.json
+  s_9717d4e1b6aa71::t_15b57f83d75ef4 1
+mods/agent-monitor/hooks/register.tsx
+  s_9717d4e1b6aa71::t_3f95747c5dbabb 1-1038
+mods/agent-monitor/tests/monitor.test.ts
+  s_9717d4e1b6aa71::t_917866cf2d8c01 1-389
+mods/agent-monitor/types/index.d.ts
+  s_9717d4e1b6aa71::t_e6b47d62cabaa0 1-41
+plugins/core/.claude-plugin/plugin.json
+  s_9717d4e1b6aa71::t_073deeb4ad76fc 1-6
+plugins/core/agents/frontend-component-builder.md
+  s_9717d4e1b6aa71::t_3e11b23484dd07 1-127
+plugins/core/agents/ui-ux-designer.md
+  s_9717d4e1b6aa71::t_a52de8fb3377d6 1-74
+plugins/core/skills/design-ship/SKILL.md
+  s_9717d4e1b6aa71::t_bcf487fa513136 1-141
+plugins/core/skills/orchestrate/SKILL.md
+  s_9717d4e1b6aa71::t_c67d4fcf6f12e4 1-136
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "128b44b23d41f33ce140aa3a68c1e35b36e64c91",
+  "prompts": {},
+  "sessions": {
+    "s_9717d4e1b6aa71": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "40eb3fc5-eeae-45fa-9d00-7be6a717d51f",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Vladlen Gladis <vladlen.gladis@deliveryhero.com>"
+    }
+  }
+}
