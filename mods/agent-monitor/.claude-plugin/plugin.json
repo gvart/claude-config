@@ -1,0 +1,7 @@
+{
+  "name": "agent-monitor",
+  "version": "0.2.0",
+  "description": "A sidebar pane for Claude Code: live progress, pause/resume, stop and messaging for subagents and workflow agents, plus session spend and plan limits",
+  "author": { "name": "gvart" },
+  "types": "./types/index.d.ts"
+}
