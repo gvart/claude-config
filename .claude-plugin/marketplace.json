@@ -11,7 +11,7 @@
     {
       "name": "gvart-skills",
       "source": "./plugins/core",
-      "description": "My skills (design-ship, orchestrate) and agents (ui-ux-designer, frontend-component-builder)."
+      "description": "My skills (design-ship, orchestrate, smart-build) and agents (ui-ux-designer, frontend-component-builder)."
     }
   ]
 }

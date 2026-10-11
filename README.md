@@ -7,7 +7,7 @@ My Claude Code setup, so a new machine is one command away.
 | Path | What it is |
 | --- | --- |
 | `mods/agent-monitor` | **Agent monitor**, a sidebar pane for subagents and workflow agents (details below) |
-| `plugins/core` | **gvart-skills**: my skills `design-ship` and `orchestrate`, and the agents `ui-ux-designer` and `frontend-component-builder` |
+| `plugins/core` | **gvart-skills**: my skills `design-ship`, `orchestrate` and `smart-build`, and the agents `ui-ux-designer` and `frontend-component-builder` |
 | `claude/CLAUDE.md` | My global instructions: semantic commits, no AI co-author, think before coding, keep changes small |
 | `install.sh` | Installs all of the above, plus [Matt Pocock's skills](https://github.com/mattpocock/skills) from upstream |
 
