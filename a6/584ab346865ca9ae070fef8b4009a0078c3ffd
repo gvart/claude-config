@@ -1,0 +1,23 @@
+mods/profiles/.claude-plugin/plugin.json
+  s_42258f82613d15::t_857ca829297f6a 3
+mods/profiles/hooks/register.tsx
+  s_42258f82613d15::t_857ca829297f6a 52-58
+mods/profiles/shell/profiles.zsh
+  s_42258f82613d15::t_857ca829297f6a 17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "a6584ab346865ca9ae070fef8b4009a0078c3ffd",
+  "prompts": {},
+  "sessions": {
+    "s_42258f82613d15": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "79808335-98dc-4ee5-bffa-0a4a0b619ab4",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "gvart <17303517+gvart@users.noreply.github.com>"
+    }
+  }
+}
