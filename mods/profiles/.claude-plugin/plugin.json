@@ -1,0 +1,6 @@
+{
+  "name": "profiles",
+  "version": "0.1.0",
+  "description": "Several Claude Code logins over one shared setup: a header showing the profile, /profile to list and switch, /profile-new to add one",
+  "author": { "name": "gvart" }
+}

@@ -1,12 +1,19 @@
 {
   "name": "gvart",
-  "owner": { "name": "gvart" },
-  "description": "My Claude Code setup: the agent-monitor mod, my own skills and agents.",
+  "owner": {
+    "name": "gvart"
+  },
+  "description": "My Claude Code setup: the agent-monitor and profiles mods, my own skills and agents.",
   "plugins": [
     {
       "name": "agent-monitor",
       "source": "./mods/agent-monitor",
       "description": "Sidebar pane with live progress, pause/resume, stop and messaging for subagents and workflow agents, plus session spend and plan limits."
+    },
+    {
+      "name": "profiles",
+      "source": "./mods/profiles",
+      "description": "Several Claude Code logins over one shared setup: a header showing the profile, /profile to list and switch, /profile-new to add one."
     },
     {
       "name": "gvart-skills",

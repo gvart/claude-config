@@ -7,6 +7,7 @@ My Claude Code setup, so a new machine is one command away.
 | Path | What it is |
 | --- | --- |
 | `mods/agent-monitor` | **Agent monitor**, a sidebar pane for subagents and workflow agents (details below) |
+| `mods/profiles` | **Profiles**, several Claude Code logins over one shared setup (details below) |
 | `plugins/core` | **gvart-skills**: my skills `design-ship`, `orchestrate` and `smart-build`, and the agents `ui-ux-designer` and `frontend-component-builder` |
 | `claude/CLAUDE.md` | My global instructions: semantic commits, no AI co-author, think before coding, keep changes small |
 | `install.sh` | Installs all of the above, plus [Matt Pocock's skills](https://github.com/mattpocock/skills) from upstream |
@@ -24,6 +25,18 @@ A pane in the Code tab of the Claude desktop app and in the terminal. Open it wi
 
 Agents report their progress themselves through a `report_progress` tool the mod adds. Pause takes effect at the agent's next tool call. Stop refuses further tool calls and asks the agent to hand back its report.
 
+### Profiles
+
+Use several Claude accounts (personal, work, another subscription) with the same skills, agents, plugins, mods, `CLAUDE.md` and settings, each keeping its own login and history.
+
+- **Header**: `● profile: default` above the prompt
+- **`/profile`**: lists the profiles and marks the current one
+- **`/profile <name>`**: closes Claude and reopens it under that profile, in the same window
+- **`/profile-new <name> [ENV=value ...]`**: creates `~/.claude-profiles/<name>/`, linking it to everything shared in `~/.claude`. The `ENV=value` pairs (a proxy URL, say) go to that profile's own `profile-settings.json`, loaded on top of the shared settings. Its first launch asks you to log in.
+- **`/profile-setup`**: switching needs a small shell helper, since Claude can't restart itself. This copies it to `~/.claude-profiles/profiles.zsh` and adds one `source` line to `~/.zshrc`. Run it once, then open a new shell. Listing and creating profiles work without it.
+
+`~/.claude` is the `default` profile. Logins stay apart because Claude Code keeps one per config folder.
+
 ## Install
 
 ```bash
@@ -31,20 +44,22 @@ git clone https://github.com/gvart/claude-config.git ~/claude-config
 ~/claude-config/install.sh
 ```
 
-The script adds this repo as a plugin marketplace and installs `agent-monitor`, `gvart-skills` and `mattpocock-skills`. It then links `~/.claude/CLAUDE.md` to the copy in the repo, first backing up any existing file.
+The script adds this repo as a plugin marketplace and installs `agent-monitor`, `profiles`, `gvart-skills` and `mattpocock-skills`. It then links `~/.claude/CLAUDE.md` to the copy in the repo, first backing up any existing file.
 
-To install only the agent monitor, run this in a Claude Code terminal session:
+To install only one of the mods, run this in a Claude Code terminal session:
 
 ```
 /plugin install agent-monitor --marketplace gvart/claude-config
+/plugin install profiles --marketplace gvart/claude-config
 ```
 
-## Developing the mod
+## Developing the mods
 
 ```bash
 claude plugin validate mods/agent-monitor
 claude plugin test mods/agent-monitor
 claude --plugin-dir mods/agent-monitor   # run it from this folder
+# the same for mods/profiles
 ```
 
 ## License

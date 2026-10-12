@@ -10,6 +10,7 @@ claude plugin marketplace add gvart/claude-config || true
 
 echo "→ Installing plugins"
 claude plugin install agent-monitor@gvart
+claude plugin install profiles@gvart
 claude plugin install gvart-skills@gvart
 
 echo "→ Installing Matt Pocock's skills from upstream"
