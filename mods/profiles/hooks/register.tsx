@@ -15,6 +15,29 @@ const current = async ($: $) => {
   return dir ? dir.replace(/\/+$/, '').split('/').pop() ?? DEFAULT : DEFAULT
 }
 
+const settingsOf = (dir: string) => `${dir}/profile-settings.json`
+
+type ProfileSettings = { env?: Record<string, string> } & Record<string, unknown>
+
+const readSettings = async ($: $, dir: string): Promise<ProfileSettings> =>
+  JSON.parse(await $.fs.read(settingsOf(dir)).catch(() => '{}'))
+
+// `KEY=value` pairs; an empty value (`KEY=`) means remove
+const parsePairs = (pairs: string[]) => {
+  const env: Record<string, string> = {}
+  for (const pair of pairs) {
+    const at = pair.indexOf('=')
+    if (at < 1) return `Not ENV=value: "${pair}"`
+    env[pair.slice(0, at)] = pair.slice(at + 1)
+  }
+  return env
+}
+
+const describeEnv = (env: Record<string, string> = {}) => {
+  const keys = Object.keys(env)
+  return keys.length ? keys.map(key => `${key}=${env[key]}`).join('\n    ') : '(none)'
+}
+
 const profiles = async ($: $) => {
   const entries = await $.fs.list(await profilesDir($)).catch(() => [])
   const names = entries
@@ -37,6 +60,16 @@ export const register: Register = on => {
       argumentHint: '<name> [ENV=value ...]',
     })
     await $.command.register({
+      name: 'profile-edit',
+      description: "Show a profile's own env, or set (KEY=value) and remove (KEY=) entries",
+      argumentHint: '<name> [ENV=value ...]',
+    })
+    await $.command.register({
+      name: 'profile-delete',
+      description: 'Delete a profile with its login and history (the shared setup stays)',
+      argumentHint: '<name> [--yes]',
+    })
+    await $.command.register({
       name: 'profile-setup',
       description: 'Add the shell helper /profile needs to relaunch claude to ~/.zshrc',
     })
@@ -50,8 +83,15 @@ export const register: Register = on => {
     const all = await profiles($)
 
     if (target === '') {
-      const rows = all.map(name => (name === now ? `● ${name} (current)` : `  ${name}`))
-      return { text: `Profiles:\n${rows.join('\n')}\n\nSwitch: /profile <name> · New: /profile-new <name>` }
+      const rows = await Promise.all(all.map(async name => {
+        const mark = name === now ? `● ${name} (current)` : `  ${name}`
+        if (name === DEFAULT) return `${mark}  ~/.claude`
+        const keys = Object.keys((await readSettings($, `${await profilesDir($)}/${name}`)).env ?? {})
+        return keys.length ? `${mark}  env: ${keys.join(', ')}` : mark
+      }))
+      return {
+        text: `Profiles:\n${rows.join('\n')}\n\nSwitch: /profile <name> · New: /profile-new · Edit: /profile-edit · Delete: /profile-delete`,
+      }
     }
     if (target === now) return { text: `Already on profile "${now}".` }
     if (!all.includes(target)) return { text: `No profile "${target}". Profiles: ${all.join(', ')}` }
@@ -77,13 +117,9 @@ export const register: Register = on => {
     const dir = `${await profilesDir($)}/${name}`
     if (await $.fs.exists(dir)) return { text: `Profile "${name}" already exists: ${dir}` }
 
-    const env: Record<string, string> = {}
-    for (const pair of pairs) {
-      const at = pair.indexOf('=')
-      if (at < 1) return { text: `Not ENV=value: "${pair}"` }
-      env[pair.slice(0, at)] = pair.slice(at + 1)
-    }
-    await $.fs.write(`${dir}/profile-settings.json`, `${JSON.stringify({ env }, null, 2)}\n`)
+    const env = parsePairs(pairs)
+    if (typeof env === 'string') return { text: env }
+    await $.fs.write(settingsOf(dir), `${JSON.stringify({ env }, null, 2)}\n`)
 
     const base = `${await home($)}/.claude`
     const linked: string[] = []
@@ -104,6 +140,56 @@ export const register: Register = on => {
     }
   })
 
+  on('command.run', { command: 'profile-edit' }, async ($, e) => {
+    const [name, ...pairs] = e.args.trim().split(/\s+/).filter(Boolean)
+    if (name === DEFAULT) return { text: 'The default profile has no own settings; edit ~/.claude/settings.json (shared by every profile).' }
+    if (!name || !NAME.test(name)) return { text: 'Usage: /profile-edit <name> [ENV=value ...]  (ENV= removes it)' }
+
+    const dir = `${await profilesDir($)}/${name}`
+    if (!(await $.fs.exists(dir))) return { text: `No profile "${name}".` }
+
+    const settings = await readSettings($, dir)
+    if (pairs.length === 0) {
+      return { text: `Profile "${name}" env:\n    ${describeEnv(settings.env)}\nFile: ${settingsOf(dir)}` }
+    }
+
+    const changes = parsePairs(pairs)
+    if (typeof changes === 'string') return { text: changes }
+    const env = { ...settings.env }
+    for (const [key, value] of Object.entries(changes)) {
+      if (value === '') delete env[key]
+      else env[key] = value
+    }
+    await $.fs.write(settingsOf(dir), `${JSON.stringify({ ...settings, env }, null, 2)}\n`)
+
+    const isCurrent = name === (await current($))
+    return {
+      text: `Profile "${name}" env:\n    ${describeEnv(env)}${isCurrent ? '\nTakes effect the next time this profile starts.' : ''}`,
+    }
+  })
+
+  on('command.run', { command: 'profile-delete' }, async ($, e) => {
+    const [name, flag] = e.args.trim().split(/\s+/).filter(Boolean)
+    if (name === DEFAULT) return { text: 'The default profile is ~/.claude itself and cannot be deleted.' }
+    if (!name || !NAME.test(name)) return { text: 'Usage: /profile-delete <name> [--yes]' }
+    if (name === (await current($))) return { text: `"${name}" is the current profile; switch to another one first.` }
+
+    const dir = `${await profilesDir($)}/${name}`
+    if (!(await $.fs.exists(dir))) return { text: `No profile "${name}".` }
+
+    if (flag !== '--yes') {
+      return {
+        text: `This deletes ${dir}: the profile's login, conversation history and own settings. The shared setup in ~/.claude is untouched.\nRun /profile-delete ${name} --yes to confirm.`,
+      }
+    }
+
+    // rm -r removes the links into ~/.claude, never what they point to
+    const { exitCode, stderr } = await $.process.run(['rm', '-rf', dir])
+    if (exitCode !== 0) return { text: `Could not delete ${dir}: ${stderr.trim()}` }
+
+    return { text: `Deleted profile "${name}".` }
+  })
+
   on('command.run', { command: 'profile-setup' }, async ($) => {
     // Copied out of the plugin, whose folder moves with each update
     const helper = `${await profilesDir($)}/profiles.zsh`
@@ -119,16 +205,15 @@ export const register: Register = on => {
     return { text: `Added to ~/.zshrc:\n  ${line}\nOpen a new shell (or run: source ~/.zshrc), then start claude.` }
   })
 
-  on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
-    const below = await next(e)
-    if (e.props.hasSurvey) return below
-
+  // The profile, in color, on its own row under the hint line, just above the status line
+  on('ui.render', { component: 'PromptHint' }, async ($, e, next) => {
+    const line = await next(e)
     const { Box, Text } = $.ui.resolve(e)
 
     return (
       <Box flexDirection="column">
-        <Text dimColor>● profile: {await current($)}</Text>
-        {below}
+        {line}
+        <Text color="blue" bold>● {await current($)}</Text>
       </Box>
     )
   })

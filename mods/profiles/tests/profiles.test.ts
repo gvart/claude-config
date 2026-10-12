@@ -20,8 +20,12 @@ const bottom = (on: On, env: Record<string, string> = {}) => {
     return { value: [...names].map(name => ({ name, kind: 'dir', size: 0, mtimeMs: 0, isLink: false })) } as never
   })
   on('process.run', ($, e) => {
-    const [, , from, to] = e.argv
-    files.set(to!, `-> ${from}`)
+    const [tool, , from, to] = e.argv
+    if (tool === 'rm') {
+      for (const path of [...files.keys()]) if (path.startsWith(`${from}/`)) files.delete(path)
+    } else {
+      files.set(to!, `-> ${from}`)
+    }
     return { value: { exitCode: 0, stdout: '', stderr: '' } } as never
   })
 
@@ -68,4 +72,35 @@ test('/profile <name> records the choice for the helper', async ($, on) => {
   await run($, 'profile-new', 'work')
   expect(await run($, 'profile', 'work')).toContain('Switching to profile "work"')
   expect(files.get(`${HOME}/.claude-profiles/.next-1`)).toBe('work')
+})
+
+test('/profile-edit sets and removes env entries, keeping the rest of the file', async ($, on) => {
+  const files = bottom(on)
+  await run($, 'profile-new', 'work A=1 B=2')
+  const path = `${HOME}/.claude-profiles/work/profile-settings.json`
+  files.set(path, JSON.stringify({ env: { A: '1', B: '2' }, model: 'opus' }))
+
+  expect(await run($, 'profile-edit', 'work')).toContain('A=1')
+  await run($, 'profile-edit', 'work A= C=3')
+  expect(JSON.parse(files.get(path)!)).toEqual({ env: { B: '2', C: '3' }, model: 'opus' })
+  expect(await run($, 'profile')).toContain('work  env: B, C')
+})
+
+test('/profile-delete asks first, then removes only the profile', async ($, on) => {
+  const files = bottom(on)
+  await run($, 'profile-new', 'work')
+
+  expect(await run($, 'profile-delete', 'work')).toContain('--yes')
+  expect(files.has(`${HOME}/.claude-profiles/work/profile-settings.json`)).toBe(true)
+
+  expect(await run($, 'profile-delete', 'work --yes')).toContain('Deleted profile "work"')
+  expect([...files.keys()].some(one => one.includes('/work/'))).toBe(false)
+  expect(files.get(`${HOME}/.claude/CLAUDE.md`)).toBe('# mine')
+  expect(await run($, 'profile-delete', 'default')).toContain('cannot be deleted')
+})
+
+test('/profile-delete refuses the current profile', async ($, on) => {
+  bottom(on, { CLAUDE_PROFILE: 'work' })
+  await run($, 'profile-new', 'work')
+  expect(await run($, 'profile-delete', 'work --yes')).toContain('switch to another one first')
 })

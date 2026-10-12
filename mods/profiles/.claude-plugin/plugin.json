@@ -1,6 +1,8 @@
 {
   "name": "profiles",
-  "version": "0.1.0",
-  "description": "Several Claude Code logins over one shared setup: a header showing the profile, /profile to list and switch, /profile-new to add one",
-  "author": { "name": "gvart" }
+  "version": "0.2.0",
+  "description": "Several Claude Code logins over one shared setup: the profile shown under the prompt, /profile to list and switch, /profile-new, /profile-edit and /profile-delete to manage them",
+  "author": {
+    "name": "gvart"
+  }
 }
