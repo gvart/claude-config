@@ -13,7 +13,7 @@
     {
       "name": "profiles",
       "source": "./mods/profiles",
-      "description": "Several Claude Code logins over one shared setup: a header showing the profile, /profile to list and switch, /profile-new to add one."
+      "description": "Several Claude Code logins over one shared setup: the current profile under the prompt, a /profile picker to switch, and commands to create, edit and delete profiles."
     },
     {
       "name": "gvart-skills",
