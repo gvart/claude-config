@@ -14,6 +14,7 @@ claude() {
         command claude --settings $home/$profile/profile-settings.json "${args[@]}"
     fi
     [[ -f $next ]] || break
+    printf '\e[H\e[2J\e[3J'  # clear the screen and scrollback before the next profile starts
     profile=$(<$next)
     args=()
   done

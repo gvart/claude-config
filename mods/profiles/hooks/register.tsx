@@ -49,6 +49,13 @@ const profiles = async ($: $) => {
 
 export const register: Register = on => {
   on('session.start', async ($, e, next) => {
+    // Keep an installed helper in step with this version of the plugin
+    const helper = `${await profilesDir($)}/profiles.zsh`
+    if (await $.fs.exists(helper)) {
+      const shipped = await $.fs.read(`${$.plugin.root}/shell/profiles.zsh`)
+      if ((await $.fs.read(helper)) !== shipped) await $.fs.write(helper, shipped)
+    }
+
     await $.command.register({
       name: 'profile',
       description: 'List Claude profiles, or relaunch under one',
