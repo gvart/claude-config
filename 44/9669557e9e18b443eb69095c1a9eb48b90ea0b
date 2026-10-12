@@ -1,0 +1,35 @@
+mods/profiles/shell/profiles.zsh
+  s_42258f82613d15::t_d614a51a8f9722 5,11-12,14-15,18,21
+README.md
+  s_42258f82613d15::t_17eb72b2e28c7c 41-42
+  s_42258f82613d15::t_e6c52db35f50d9 32-37
+mods/profiles/.claude-plugin/plugin.json
+  s_42258f82613d15::t_9044f4beaa6e87 3-4
+mods/profiles/README.md
+  s_42258f82613d15::t_542f324d763e22 1-6,10-11,13-21,23-37,39-45,48-49,52-61,63-64,66,69-70,72-77,80-88,90,92,94-107,114-129
+  s_42258f82613d15::t_e6c52db35f50d9 7-9,12,22,38,46-47,50-51,62,65,67-68,71,78-79,89,91,93,108-113
+mods/profiles/tests/profiles.test.ts
+  s_42258f82613d15::t_46f05c6123f200 19
+  s_42258f82613d15::t_21e18489e1ab3c 6,15,39,41-64,127-151
+  s_42258f82613d15::t_cc474ae2911b60 152
+.claude-plugin/marketplace.json
+  s_42258f82613d15::t_9044f4beaa6e87 16
+mods/profiles/hooks/register.tsx
+  s_42258f82613d15::t_dd2e0a85acaa6d 5-6,9-10,14-18,23-26,29-36,38-46,53-55,60-64,67,70-143,148-149,157-169,176,178-180,182-187,189,198,210-213,216,222,229-245,247-250,252,254-255,257,271-275,282,285,288,290-294,300,313-315,319,322,326-327,332-335
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "449669557e9e18b443eb69095c1a9eb48b90ea0b",
+  "prompts": {},
+  "sessions": {
+    "s_42258f82613d15": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "79808335-98dc-4ee5-bffa-0a4a0b619ab4",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "gvart <17303517+gvart@users.noreply.github.com>"
+    }
+  }
+}
