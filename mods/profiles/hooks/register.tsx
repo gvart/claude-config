@@ -13,6 +13,8 @@ const home = async ($: $) => (await $.env.get('HOME')) ?? ''
 const profilesDir = async ($: $) => `${await home($)}/.claude-profiles`
 const dirOf = async ($: $, name: string) => `${await profilesDir($)}/${name}`
 const settingsOf = (dir: string) => `${dir}/profile-settings.json`
+// A path as shown to the person, with the home folder as ~
+const shown = async ($: $, path: string) => path.replace(await home($), '~')
 const colorsOf = async ($: $) => `${await profilesDir($)}/colors.json`
 
 type ProfileSettings = { env?: Record<string, string> } & Record<string, unknown>
@@ -41,7 +43,7 @@ const readSettings = async ($: $, dir: string): Promise<ProfileSettings | Error>
   try {
     return JSON.parse(text)
   } catch {
-    return new Error(`${settingsOf(dir)} is not valid JSON; fix it by hand.`)
+    return new Error(`${await shown($, settingsOf(dir))} is not valid JSON; fix it by hand.`)
   }
 }
 
@@ -196,7 +198,7 @@ export const register: Register = on => {
     }
 
     const dir = await dirOf($, name)
-    if (await $.fs.exists(dir)) return { text: `Profile "${name}" already exists: ${dir}` }
+    if (await $.fs.exists(dir)) return { text: `Profile "${name}" already exists: ${await shown($, dir)}` }
 
     const env = parsePairs(pairs)
     if (typeof env === 'string') return { text: env }
@@ -217,9 +219,9 @@ export const register: Register = on => {
 
     return {
       text: [
-        `Created profile "${name}" in ${dir}`,
+        `Created profile "${name}" in ${await shown($, dir)}`,
         `Shared from ~/.claude: ${linked.join(', ')}`,
-        `Own settings: ${settingsOf(dir)}${pairs.length ? ` (env: ${Object.keys(env).join(', ')})` : ''}`,
+        `Own settings: ${await shown($, settingsOf(dir))}${pairs.length ? ` (env: ${Object.keys(env).join(', ')})` : ''}`,
         `Run /profile ${name} to switch; its first launch asks you to log in.`,
       ].join('\n'),
     }
@@ -254,7 +256,7 @@ export const register: Register = on => {
     if (settings instanceof Error) return { text: settings.message }
 
     if (pairs.length === 0) {
-      return { text: [...notes, `Profile "${name}" env:\n    ${describeEnv(settings.env)}`, `File: ${settingsOf(dir)}`].join('\n') }
+      return { text: [...notes, `Profile "${name}" env:\n    ${describeEnv(settings.env)}`, `File: ${await shown($, settingsOf(dir))}`].join('\n') }
     }
 
     const changes = parsePairs(pairs)
@@ -285,7 +287,7 @@ export const register: Register = on => {
     const dir = await dirOf($, name)
     if (!(await $.fs.exists(dir))) return { text: `No profile "${name}".` }
 
-    const warning = `This deletes ${dir}: the profile's login, conversation history and own settings. The shared setup in ~/.claude is untouched.`
+    const warning = `This deletes ${await shown($, dir)}: the profile's login, conversation history and own settings. The shared setup in ~/.claude is untouched.`
     if (flag !== '--yes') {
       const answer = await $.ui
         .ask(`Delete profile "${name}"? Its login and history are deleted too.`, { options: ['Delete', 'Cancel'], header: 'Delete' })
@@ -296,7 +298,7 @@ export const register: Register = on => {
 
     // rm -r removes the links into ~/.claude, never what they point to
     const { exitCode, stderr } = await $.process.run(['rm', '-rf', dir])
-    if (exitCode !== 0) return { text: `Could not delete ${dir}: ${stderr.trim()}` }
+    if (exitCode !== 0) return { text: `Could not delete ${await shown($, dir)}: ${stderr.trim()}` }
     await registerCommands($)
 
     return { text: `Deleted profile "${name}".` }

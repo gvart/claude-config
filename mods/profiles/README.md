@@ -2,12 +2,7 @@
 
 Use several Claude accounts on one machine, such as personal, work and another subscription, with one shared setup. Every profile sees the same `CLAUDE.md`, settings, skills, agents, plugins and mods. Each one keeps its own login, conversation history and, optionally, its own environment variables (a proxy URL, say).
 
-```
-❯ /profile
-  Switch profile? (now: default)
-  ❯ 1. work
-    2. personal-max
-```
+![Creating a profile, switching with the picker and by name, and deleting a profile](demo.gif)
 
 The current profile is shown under the input line, just above the status line, in its own color: blue for `default`, and a color picked from the name for the others.
 

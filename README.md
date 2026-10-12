@@ -29,6 +29,8 @@ Agents report their progress themselves through a `report_progress` tool the mod
 
 Use several Claude accounts (personal, work, another subscription) with the same skills, agents, plugins, mods, `CLAUDE.md` and settings, each keeping its own login and history.
 
+![The profiles mod: create, switch and delete profiles](mods/profiles/demo.gif)
+
 - **Label**: the current profile, `● work`, in its own color under the input line, just above the status line
 - **`/profile`**: a picker to switch profiles; `/profile <name>` switches directly. Claude closes, the terminal clears and Claude reopens under that profile.
 - **`/profile-new <name> [ENV=value ...]`**: creates a profile that shares everything in `~/.claude`, with its own login and optional env (a proxy URL, say)
