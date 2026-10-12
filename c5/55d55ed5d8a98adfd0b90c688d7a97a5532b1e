@@ -1,0 +1,33 @@
+mods/profiles/tests/profiles.test.ts
+  s_42258f82613d15::t_13ff49a86ea896 1-71
+mods/profiles/.claude-plugin/plugin.json
+  s_42258f82613d15::t_084989408aa33c 1-6
+mods/profiles/hooks/hooks.json
+  s_42258f82613d15::t_084989408aa33c 1
+mods/profiles/hooks/register.tsx
+  s_42258f82613d15::t_084989408aa33c 1-135
+mods/profiles/shell/profiles.zsh
+  s_42258f82613d15::t_084989408aa33c 1-21
+.claude-plugin/marketplace.json
+  s_42258f82613d15::t_e7b9152b39ec51 3-6,13-17
+README.md
+  s_42258f82613d15::t_0341b95b55f30a 10,28-39,47,49,53,56,62
+install.sh
+  s_42258f82613d15::t_5661ae92922de6 13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "c555d55ed5d8a98adfd0b90c688d7a97a5532b1e",
+  "prompts": {},
+  "sessions": {
+    "s_42258f82613d15": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "79808335-98dc-4ee5-bffa-0a4a0b619ab4",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "gvart <17303517+gvart@users.noreply.github.com>"
+    }
+  }
+}
