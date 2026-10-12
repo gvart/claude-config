@@ -102,7 +102,7 @@ const registerCommands = async ($: $) => {
   })
   await $.command.register({
     name: 'profile-delete',
-    description: 'Delete a profile with its login and history (the shared setup stays)',
+    description: "Delete a profile's folder: its history and own settings (the shared setup stays)",
     argumentHint: `<${others}>`,
   })
   await $.command.register({ name: 'profile-setup', description: 'Add the shell helper /profile needs to relaunch claude to ~/.zshrc' })
@@ -287,10 +287,10 @@ export const register: Register = on => {
     const dir = await dirOf($, name)
     if (!(await $.fs.exists(dir))) return { text: `No profile "${name}".` }
 
-    const warning = `This deletes ${await shown($, dir)}: the profile's login, conversation history and own settings. The shared setup in ~/.claude is untouched.`
+    const warning = `This deletes ${await shown($, dir)}: the profile's history, sessions and own settings. The shared setup in ~/.claude is untouched.`
     if (flag !== '--yes') {
       const answer = await $.ui
-        .ask(`Delete profile "${name}"? Its login and history are deleted too.`, { options: ['Delete', 'Cancel'], header: 'Delete' })
+        .ask(`Delete profile "${name}"? Its history and own settings are deleted.`, { options: ['Delete', 'Cancel'], header: 'Delete' })
         .catch(() => undefined)
       if (answer === undefined) return { text: `${warning}\nRun /profile-delete ${name} --yes to confirm.` }
       if (answer !== 'Delete') return { text: `Kept profile "${name}".` }
@@ -301,7 +301,7 @@ export const register: Register = on => {
     if (exitCode !== 0) return { text: `Could not delete ${await shown($, dir)}: ${stderr.trim()}` }
     await registerCommands($)
 
-    return { text: `Deleted profile "${name}".` }
+    return { text: `Deleted profile "${name}". Its saved login may remain in the macOS Keychain; run /logout in a profile before deleting it to remove that too.` }
   })
 
   on('command.run', { command: 'profile-setup' }, async ($) => {

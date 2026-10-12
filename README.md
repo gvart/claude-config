@@ -27,20 +27,11 @@ Agents report their progress themselves through a `report_progress` tool the mod
 
 ### Profiles
 
-Use several Claude accounts (personal, work, another subscription) with the same skills, agents, plugins, mods, `CLAUDE.md` and settings, each keeping its own login and history.
+Several Claude accounts (personal, work, another subscription) sharing one setup, each with its own login and history. `/profile` switches between them, and the current one shows under the prompt.
 
 ![The profiles mod: create, switch and delete profiles](mods/profiles/demo.gif)
 
-- **Label**: the current profile, `● work`, in its own color under the input line, just above the status line
-- **`/profile`**: a picker to switch profiles; `/profile <name>` switches directly. Claude closes, the terminal clears and Claude reopens under that profile.
-- **`/profile-new <name> [ENV=value ...]`**: creates a profile that shares everything in `~/.claude`, with its own login and optional env (a proxy URL, say)
-- **`/profile-edit <name> [ENV=value ...] [--color=<color>]`**: shows (secrets masked) or changes a profile's own env and label color
-- **`/profile-delete <name>`**: deletes a profile with its login and history after a Delete / Cancel question; `~/.claude` is untouched
-- **`/profile-setup`**: switching needs a small shell helper, since Claude can't restart itself. This adds one `source` line to `~/.zshrc`. Run it once, then open a new terminal tab.
-
-`~/.claude` is the `default` profile. Logins stay apart because Claude Code keeps one per config folder.
-
-Full guide, with how it works, limitations and troubleshooting: [mods/profiles/README.md](mods/profiles/README.md).
+Commands and details: [mods/profiles/README.md](mods/profiles/README.md).
 
 ## Install
 
