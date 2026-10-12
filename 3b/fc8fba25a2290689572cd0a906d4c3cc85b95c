@@ -1,0 +1,25 @@
+README.md
+  s_42258f82613d15::t_929ab747d752fe 32-33
+mods/profiles/.claude-plugin/plugin.json
+  s_42258f82613d15::t_9f25bbff50d223 3
+mods/profiles/README.md
+  s_42258f82613d15::t_d8ae4ca42cf45b 5
+mods/profiles/hooks/register.tsx
+  s_42258f82613d15::t_ab31d63beb4a9b 16-17,46,201,222,224,259,290,301
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "3bfc8fba25a2290689572cd0a906d4c3cc85b95c",
+  "prompts": {},
+  "sessions": {
+    "s_42258f82613d15": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "79808335-98dc-4ee5-bffa-0a4a0b619ab4",
+        "model": "unknown"
+      },
+      "human_author": "gvart <17303517+gvart@users.noreply.github.com>"
+    }
+  }
+}
