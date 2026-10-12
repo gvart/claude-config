@@ -14,16 +14,11 @@ My Claude Code setup, so a new machine is one command away.
 
 ### Agent monitor
 
-A pane in the Code tab of the Claude desktop app and in the terminal. Open it with `/agent-monitor`.
+A side pane showing every subagent and workflow agent as it works (progress, current step, tokens), with Pause, Stop and Message on each card, plus session spend and plan limits.
 
-- **One card per agent**: a pixel avatar for its role (Explorer, Seer, Smith, Shield-maiden, Skald, Rune-carver, Viking), its type, status, a progress bar, the current step, elapsed time, tokens and tool calls
-- **Controls on each card**: Pause/Resume, Stop, Message (your next prompt goes to that agent) and Info (full details)
-- **Top bar**: Pause all, Stop all, overall progress, session spend, and the time left in your plan's 5-hour and weekly windows, with their reset times
-- **Stuck detection**: a card's border flashes when its agent has shown no activity for 2 minutes
-- **Conversation box**: shows the messages you sent an agent and its replies, with new replies highlighted
-- **Cleanup**: Dismiss on each card, Clear ended, or Auto-clear, which removes finished agents after a minute
+![The agent monitor: three background agents from start to finish](mods/agent-monitor/demo.gif)
 
-Agents report their progress themselves through a `report_progress` tool the mod adds. Pause takes effect at the agent's next tool call. Stop refuses further tool calls and asks the agent to hand back its report.
+Details: [mods/agent-monitor/README.md](mods/agent-monitor/README.md).
 
 ### Profiles
 
